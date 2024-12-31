@@ -1,0 +1,121 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="property_tree_view">
+            <field name="name">Property Tree</field>
+            <field name="model">property</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="owner_id"/>
+                    <field name="postcode"/>
+                    <field name="date_availability"/>
+                    <field name="selling_Price"/>
+                    <field name="garden"/>
+                    <field name="facades"/>
+                    <field name="garden_area" optional="hide"/>
+                    <field name="bedrooms" optional="1"/>
+                    <field name="garage" optional="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="property_form_view">
+            <field name="name">property form</field>
+            <field name="model">property</field>
+            <field name="arch" type="xml">
+                <form create="1" edit="1" delete="1">
+                    <sheet>
+                        <header>
+                        </header>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="General Info.">
+                                <field name="owner_id" required="1"/>
+                                <field name="date_availability" required="1"/>
+                                <field name="postcode"/>
+                                <field name="expected_Price"/>
+                                <field name="selling_Price"/>
+                                <field name="diff"/>
+                            </group>
+                            <group>
+                                <field name="garden_area"/>
+                                <field name="garage" widget="boolean_button"/>
+                                <field name="bedrooms"/>
+                                <field name="living_area"/>
+                                <field name="facades"/>
+                                <field name="garden"/>
+                                <field name="garden_orientation"/>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="property_search_view">
+            <field name="name">property search</field>
+            <field name="model">property</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="postcode"/>
+                    <filter name="is_garden" string="With Garden" domain="[('garden', '=', True)]"/>
+                    <filter name="is_not_garden" string="Without Garden" domain="[('garden', '!=', True)]"/>
+                    <filter name="group_garden" string="Garden" context="{'group_by': 'garden'}"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Task Name + des"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+        <!--
+            <record model="ir.actions.act_window" id="app_one.action_window">
+              <field name="name">app_one window</field>
+              <field name="res_model">app_one.app_one</field>
+              <field name="view_mode">tree,form</field>
+            </record>
+        -->
+
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="app_one.action_server">
+              <field name="name">app_one server</field>
+              <field name="model_id" ref="model_app_one_app_one"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "tree,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+        <record model="ir.actions.act_window" id="propetry_action"> <!--الريكورد ضرورى لتنفيذ الاكشن-->
+            <field name="name">Propetry</field>
+            <field name="res_model">property</field>    <!--اسم الموديل اللى فى البايثون فايل-->
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[Command.clear(),
+                                      (0,0,{'view_mode':'tree', 'view_id': ref('property_tree_view')}),
+                                      (0,0,{'view_mode':'form', 'view_id': ref('property_form_view')})]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new appointment patient
+                </p>
+                <p>
+                    There is no patient
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

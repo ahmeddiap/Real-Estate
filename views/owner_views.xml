@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="owner_tree_view">
+            <field name="name">owner Tree</field>
+            <field name="model">owner</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="owner_form_view">
+            <field name="name">owner form</field>
+            <field name="model">owner</field>
+            <field name="arch" type="xml">
+                <form create="1" edit="1" delete="1">
+                    <sheet>
+                        <header>
+                        </header>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="General Info.">
+                                <field name="phone" required="1"/>
+                                <field name="address" required="0"/>
+                            </group>
+                            <group>
+                                <field name="property_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+<!--                        <notebook>-->
+<!--                            <page>-->
+<!--                                <field name="property_ids" widget="one2many">-->
+<!--                                    <tree editable="bottom">-->
+<!--                                        <field name="property_ids"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+        <!--
+            <record model="ir.actions.act_window" id="app_one.action_window">
+              <field name="name">app_one window</field>
+              <field name="res_model">app_one.app_one</field>
+              <field name="view_mode">tree,form</field>
+            </record>
+        -->
+
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="app_one.action_server">
+              <field name="name">app_one server</field>
+              <field name="model_id" ref="model_app_one_app_one"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "tree,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+        <record model="ir.actions.act_window" id="propetry_action"> <!--الريكورد ضرورى لتنفيذ الاكشن-->
+            <field name="name">Propetry</field>
+            <field name="res_model">owner</field>    <!--اسم الموديل اللى فى البايثون فايل-->
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[Command.clear(),
+                                      (0,0,{'view_mode':'tree', 'view_id': ref('owner_tree_view')}),
+                                      (0,0,{'view_mode':'form', 'view_id': ref('owner_form_view')})]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new appointment patient
+                </p>
+                <p>
+                    There is no patient
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
